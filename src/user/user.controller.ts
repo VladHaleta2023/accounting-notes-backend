@@ -75,6 +75,7 @@ export class UserController {
         httpOnly: false,
         sameSite: isProd ? 'none' : 'lax',
         secure: isProd,
+        domain: '.onrender.com',
         path: '/',
       });
 
