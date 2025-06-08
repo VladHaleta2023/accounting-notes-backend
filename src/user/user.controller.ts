@@ -73,7 +73,7 @@ export class UserController {
       res.cookie('role', 'ADMIN', {
         maxAge: 1 * 24 * 60 * 60 * 1000,
         httpOnly: true,
-        sameSite: isProd ? 'strict' : 'lax',
+        sameSite: isProd ? 'none' : 'lax',
         secure: isProd,
         domain: 'accounting-notes-backend.onrender.com',
         path: '/',
