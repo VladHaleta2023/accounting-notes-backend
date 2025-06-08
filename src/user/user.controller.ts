@@ -75,7 +75,7 @@ export class UserController {
         httpOnly: true,
         sameSite: isProd ? 'none' : 'lax',
         secure: isProd,
-        domain: 'accounting-notes-backend.onrender.com',
+        domain: isProd ? 'accounting-notes-backend.onrender.com' : "",
         path: '/',
       });
 
