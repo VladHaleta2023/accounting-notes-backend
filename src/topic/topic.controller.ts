@@ -4,10 +4,13 @@ import { TopicDto } from './dto/topic.dto';
 import { TopicSearchDto } from './dto/topic.search.dto';
 import { ContentDto } from './dto/content.dto';
 import { AdminRoleGuard } from 'src/user/guards/admin-role.guard';
+import { CategoryService } from 'src/category/category.service';
 
 @Controller('categories/:categoryId/topics')
 export class TopicController {
-  constructor(private readonly topicService: TopicService) {}
+  constructor(
+    private readonly topicService: TopicService
+  ) {}
 
   @Get()
   async findAll(
