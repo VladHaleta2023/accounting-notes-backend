@@ -18,13 +18,8 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
 
-  const isProd = configService.get<string>('NODE_ENV') === 'production';
-  const allowedOrigin = isProd
-  ? 'https://accounting-notes-frontend.vercel.app'
-  : 'http://localhost:3000';
-
   app.enableCors({
-    origin: allowedOrigin,
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
