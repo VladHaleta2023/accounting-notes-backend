@@ -106,7 +106,14 @@ export class UserController {
   @Post('admin/logout')
   async logoutAdmin(@Res({ passthrough: true }) res: Response) {
     try {
-      res.clearCookie('role');
+      const isProd = this.configService.get<string>('NODE_ENV') === 'production';
+
+      res.clearCookie('role', {
+        sameSite: isProd ? 'none' : 'lax',
+        secure: isProd,
+        domain: isProd ? 'accounting-notes-backend.onrender.com' : "",
+        path: '/',
+      });
 
       return {
         statusCode: 200,
