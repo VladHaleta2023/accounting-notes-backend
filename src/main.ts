@@ -18,8 +18,14 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
   }));
 
+  const allowedOrigins = [
+    'https://accounting-notes-frontend.vercel.app',
+    'https://accounting-notes-frontend-ijvep6pig-vladhaleta2023s-projects.vercel.app',
+    'http://localhost:3000'
+  ];
+
   app.enableCors({
-    origin: configService.getOrThrow<string>("ALLOWED_ORIGIN"),
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
