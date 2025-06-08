@@ -71,11 +71,11 @@ export class UserController {
       const isProd = this.configService.get<string>('NODE_ENV') === 'production';
 
       res.cookie('role', 'ADMIN', {
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: false,
-        sameSite: isProd ? 'none' : 'lax',
+        maxAge: 1 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: isProd ? 'strict' : 'lax',
         secure: isProd,
-        domain: '.onrender.com',
+        domain: 'accounting-notes-backend.onrender.com',
         path: '/',
       });
 
