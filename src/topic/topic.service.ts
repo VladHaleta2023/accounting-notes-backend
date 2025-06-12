@@ -47,12 +47,7 @@ export class TopicService {
         const result = await this.prismaService.topic.findMany({
             select: {
                 id: true,
-                title: true,
-                category: {
-                    select: {
-                        name: true,
-                    }
-                }
+                title: true
             },
             where: {
                 categoryId,
