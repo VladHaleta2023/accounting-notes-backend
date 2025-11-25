@@ -4,12 +4,16 @@ import { TopicDto } from './dto/topic.dto';
 import { CategoryService } from 'src/category/category.service';
 import { TopicSearchDto } from './dto/topic.search.dto';
 import { ContentDto } from './dto/content.dto';
+import * as gTTS from 'gtts';
+import { StorageService } from 'src/storage/storage.service';
+import * as fs from 'fs';
 
 @Injectable()
 export class TopicService {
     constructor (
         private readonly prismaService: PrismaService,
         private readonly categoryService: CategoryService,
+        private storageService: StorageService,
     ) {}
 
     async verifyTopic(id: string) {
@@ -54,8 +58,8 @@ export class TopicService {
                 ...(dto?.title && dto.title.trim() !== ''
                     ? {
                         title: {
-                        contains: dto.title,
-                        mode: 'insensitive',
+                            contains: dto.title,
+                            mode: 'insensitive',
                         },
                     }
                 : {}),
@@ -80,6 +84,7 @@ export class TopicService {
             select: {
                 id: true,
                 title: true,
+                audioUrl: true,
                 content: true,
                 createdAt: true
             },
@@ -100,7 +105,8 @@ export class TopicService {
             select: {
                 id: true,
                 title: true,
-                content: true
+                content: true,
+                audioUrl: true
             },
             where: {
                 categoryId,
@@ -115,7 +121,8 @@ export class TopicService {
             select: {
                 id: true,
                 title: true,
-                content: true
+                content: true,
+                audioUrl: true
             },
             where: {
                 categoryId,
@@ -192,6 +199,7 @@ export class TopicService {
         const result = await this.prismaService.topic.findFirst({
             select: {
                 content: true,
+                audioUrl: true
             },
             where: {
                 categoryId,
@@ -207,26 +215,60 @@ export class TopicService {
     }
 
     async updateNotes(categoryId: string, id: string, dto: ContentDto) {
-    await this.categoryService.verifyCategory(categoryId);
-    await this.verifyTopic(id);
+        await this.categoryService.verifyCategory(categoryId);
+        await this.verifyTopic(id);
 
-    const result = await this.prismaService.topic.update({
-        select: {
-            content: true,
-        },
-        where: {
-            categoryId,
-            id,
-        },
-        data: {
-            content: dto.content
+        if (!dto.content) {
+            throw new Error('Content is empty');
         }
-    });
 
-    if (!result) {
-        return null;
-    }
+        const result = await this.prismaService.topic.update({
+            where: { id, categoryId },
+            data: { content: dto.content },
+            select: { content: true, audioUrl: true },
+        });
 
-    return result;
+        if (!result) return null;
+
+        const textForAudio = dto.content.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s.,!?;:()-]/g, '');
+        const gtts = new gTTS(textForAudio, 'pl');
+
+        const audioBuffer: Buffer = await new Promise((resolve, reject) => {
+            gtts.save('temp.mp3', (err) => {
+                if (err) {
+                    return reject(err instanceof Error ? err : new Error(String(err)));
+                }
+
+                try {
+                    const buffer = fs.readFileSync('temp.mp3');
+                    fs.unlinkSync('temp.mp3');
+                    resolve(buffer);
+                } catch (fsErr) {
+                    reject(fsErr instanceof Error ? fsErr : new Error(String(fsErr)));
+                }
+            });
+        });
+
+        const audioKey = `${id}.mp3`;
+
+        if (result.audioUrl) {
+            const oldKey = result.audioUrl.split('/').pop();
+            if (oldKey) {
+                await this.storageService.deleteFile(oldKey);
+            }
+        }
+
+        const audioUrl = await this.storageService.uploadBuffer(
+            audioBuffer,
+            audioKey,
+            'audio/mpeg',
+        );
+
+        await this.prismaService.topic.update({
+            where: { id },
+            data: { audioUrl },
+        });
+
+        return { ...result, audioUrl };
     }
 }

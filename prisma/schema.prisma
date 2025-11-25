@@ -4,7 +4,12 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  USER
 }
 
 model User {
@@ -32,15 +37,11 @@ model Topic {
   id         String   @id @default(uuid())
   title      String
   content    String   @default("")
+  audioUrl   String   @default("")
   categoryId String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   category   Category @relation("CategoryTopics", fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@map("topics")
-}
-
-enum UserRole {
-  ADMIN
-  USER
 }
