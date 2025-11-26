@@ -222,13 +222,13 @@ export class TopicService {
             throw new Error('Content is empty');
         }
 
-        const result = await this.prismaService.topic.update({
+        const contentUpdate = await this.prismaService.topic.update({
             where: { id, categoryId },
             data: { content: dto.content },
             select: { content: true, audioUrl: true },
         });
 
-        if (!result) return null;
+        if (!contentUpdate) return null;
 
         const textForAudio = dto.content.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s.,!?;:()-]/g, '');
         const gtts = new gTTS(textForAudio, 'pl');
@@ -251,8 +251,8 @@ export class TopicService {
 
         const audioKey = `${id}.mp3`;
 
-        if (result.audioUrl) {
-            const oldKey = result.audioUrl.split('/').pop();
+        if (contentUpdate.audioUrl) {
+            const oldKey = contentUpdate.audioUrl.split('/').pop();
             if (oldKey) {
                 await this.storageService.deleteFile(oldKey);
             }
@@ -264,11 +264,17 @@ export class TopicService {
             'audio/mpeg',
         );
 
-        await this.prismaService.topic.update({
+        const finalResult = await this.prismaService.topic.update({
             where: { id },
             data: { audioUrl },
+            select: { 
+                content: true, 
+                audioUrl: true,
+                id: true,
+                title: true,
+            },
         });
 
-        return { ...result, audioUrl };
+        return finalResult;
     }
 }
