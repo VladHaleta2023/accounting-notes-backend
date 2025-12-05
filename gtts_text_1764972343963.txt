@@ -1,0 +1,36 @@
+Rozpoczynamy nagranie. 1. po tym jak wystawiliśmy fakturę należy wtedy wydać bądź przyjąć dane towary/materiały/wyroby gotowe zgodnie z fakturą jaką wystawiono 
+
+2. księgowanie dokumentów magazynowych do zakupu za 100 zł
+Dokument źródłowy: PZ 1/07/2025 (zgodnie z dokumentem)
+- Rodzaj dowodu: przyjęcie zewnętrzne
+- opis: przyjęcie zakupionych towarów do magazynu
+- data: (wzięta z dokumentu, najczęściej jest taka sama do wszystkich trzech dat)
+
+3. księgowanie na kontach
+Poz: 1
+konto: 330 (Towary)
+kwota WN: 100     kwota MA: -
+opis: (taki sam jak główny opis)
+
+Poz: 2
+konto: 300 (rozliczenie zakupu)
+kwota WN: -    kwota MA: 100
+opis: (taki sam jak główny opis)
+
+4. księgowanie dokumentów magazynowych do sprzedaży za 100 zł
+Dokument źródłowy: WZ 1/07/2025 (zgodnie z dokumentem)
+- Rodzaj dowodu: wydanie zewnętrzne
+- opis: wydanie sprzedanych towarów z magazynu
+- data: (wzięta z dokumentu, najczęściej jest taka sama do wszystkich trzech dat)
+
+5. księgowanie na kontach
+
+Poz: 1
+konto: 731 (wartość sprzedanych towarów w cenach zakupu)
+kwota WN: 100     kwota MA: -
+opis: (taki sam jak główny opis)
+
+Poz: 2
+konto: 330 (towary)
+kwota WN: -    kwota MA: 100
+opis: (taki sam jak główny opis Koniec nagrania.
