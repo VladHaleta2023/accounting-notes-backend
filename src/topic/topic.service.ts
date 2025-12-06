@@ -308,13 +308,6 @@ export class TopicService {
 
     private prepareTextForGTTS(text: string): string {
         const cleanedText = text
-            .replace(/[\u{1F300}-\u{1F9FF}]/gu, ' ')
-            .replace(/[\u2600-\u26FF]/gu, ' ')
-            .replace(/[\u2700-\u27BF]/gu, ' ')
-            
-            .replace(/^\uFEFF/, '')
-            .replace(/[\u200B-\u200F\uFEFF]/g, '')
-            
             .replace(/[➔➜➤►▶▷❯›»→←↔↕↑↓↗↘↙↖]/gu, ' ')
             .replace(/[●○◆◇■□▲△▼▽★☆✦✧❖♠♥♦♣♩♪♫♬]/gu, ' ')
             .replace(/[✓✔✕✗✘✅❌]/gu, ' ')
@@ -325,42 +318,8 @@ export class TopicService {
             .replace(/^[\s\u00A0]*[•\-–—*·▪▫▶›»➤➔]\s*/gm, '')
             .replace(/^[\s\u00A0]*[\dIVXLCDMivxlcdm]+[.)]\s*/gm, '')
             .replace(/^[\s\u00A0]*[a-z]\)\s*/gim, '')
-            
             .replace(/\s+[•\-–—*]\s+/g, ' ')
-            
-            // ==================== EKA.05 - Prowadzenie dokumentacji w jednostce organizacyjnej ====================
-            .replace(/\bEKA\.05\b/gi, 'EKA punkt zero pięć')
-            .replace(/\bEKA-05\b/gi, 'EKA zero pięć')
-            .replace(/\bEE\.05\b/gi, 'EE punkt zero pięć')
-            .replace(/\bEE-05\b/gi, 'EE zero pięć')
-            
-            // ==================== EKA.07 - Prowadzenie rachunkowości ====================
-            .replace(/\bEKA\.07\b/gi, 'EKA punkt zero siedem')
-            .replace(/\bEKA-07\b/gi, 'EKA zero siedem')
-            .replace(/\bEE\.07\b/gi, 'EE punkt zero siedem')
-            .replace(/\bEE-07\b/gi, 'EE zero siedem')
-            
-            // ==================== Kwalifikacje i egzaminy ====================
-            .replace(/\bkwalifikacja\s+w\s+zawodzie\b/gi, 'kwalifikacja w zawodzie')
-            .replace(/\btechnik\s+rachunkowości\b/gi, 'technik rachunkowości')
-            .replace(/\btechnik\s+ekonomista\b/gi, 'technik ekonomista')
-            .replace(/\bkształcenie\s+zawodowe\b/gi, 'kształcenie zawodowe')
-            .replace(/\begzamin\s+zawodowy\b/gi, 'egzamin zawodowy')
-            .replace(/\begzamin\s+potwierdzający\b/gi, 'egzamin potwierdzający kwalifikacje')
-            .replace(/\bświadectwo\s+kwalifikacyjne\b/gi, 'świadectwo kwalifikacyjne')
-            .replace(/\bdyplom\s+potwierdzający\b/gi, 'dyplom potwierdzający kwalifikacje')
-            
-            // ... остальные ваши замены оставляем без изменений ...
-            
-            // ==================== Data i czas ====================
-            .replace(/(\d{1,2})\.(\d{1,2})\.(\d{4})/g, '$1 $2 $3 roku')
-            .replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/g, '$1 $2 $3 roku')
-            .replace(/(\d{1,2})-(\d{1,2})-(\d{4})/g, '$1 $2 $3 roku')
-            
-            // ==================== Formatowanie tekstu ====================
-            .replace(/^(\d+)\.\s+/gm, 'Punkt $1: ')
-            .replace(/(\n)(\d+)\.\s+/g, '$1Punkt $2: ')
-            
+
             // ==================== Normalizacja ====================
             .replace(/\s+/g, ' ')
             .replace(/\n{3,}/g, '\n\n')
