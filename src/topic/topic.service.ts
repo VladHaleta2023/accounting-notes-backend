@@ -282,8 +282,25 @@ export class TopicService {
 
     private prepareTextForGTTS(text: string): string {
         return text
+            .replace(/[\u{1F300}-\u{1F9FF}]/gu, ' ')
+            .replace(/[\u2600-\u26FF]/gu, ' ')
+            .replace(/[\u2700-\u27BF]/gu, ' ')
+            
             .replace(/^\uFEFF/, '')
             .replace(/[\u200B-\u200F\uFEFF]/g, '')
+            
+            .replace(/[➔➜➤►▶▷❯›»→←↔↕↑↓↗↘↙↖]/gu, ' ')
+            .replace(/[●○◆◇■□▲△▼▽★☆✦✧❖♠♥♦♣♩♪♫♬]/gu, ' ')
+            .replace(/[✓✔✕✗✘✅❌]/gu, ' ')
+            // eslint-disable-next-line no-misleading-character-class
+            .replace(/[🖊️✏️📝📄📋📎📌🔖🏷️]/gu, ' ')
+            .replace(/[\u2000-\u206F\u2E00-\u2E7F]/gu, ' ')
+            
+            .replace(/^[\s\u00A0]*[•\-–—*·▪▫▶›»➤➔]\s*/gm, '')
+            .replace(/^[\s\u00A0]*[\dIVXLCDMivxlcdm]+[.)]\s*/gm, '')
+            .replace(/^[\s\u00A0]*[a-z]\)\s*/gim, '')
+            
+            .replace(/\s+[•\-–—*]\s+/g, ' ')
             
             // ==================== EKA.05 - Prowadzenie dokumentacji w jednostce organizacyjnej ====================
             .replace(/\bEKA\.05\b/gi, 'EKA punkt zero pięć')
@@ -471,19 +488,11 @@ export class TopicService {
             // ==================== Formatowanie tekstu ====================
             .replace(/^(\d+)\.\s+/gm, 'Punkt $1: ')
             .replace(/(\n)(\d+)\.\s+/g, '$1Punkt $2: ')
-            .replace(/^-\s+/gm, '• ')
-            .replace(/^–\s+/gm, '• ')
-            .replace(/\(([^)]+)\)/g, '- $1')
-            .replace(/\[([^\]]+)\]/g, '- $1')
             
             // ==================== Normalizacja ====================
             .replace(/\s+/g, ' ')
             .replace(/\n{3,}/g, '\n\n')
             .trim()
-            
-            // ==================== Dodanie kontekstu ====================
-            .replace(/^/, 'Materiały szkoleniowe dla technika rachunkowości. ')
-            .replace(/$/, ' Koniec materiału szkoleniowego.');
     }
 
     private generateAudioStable(text: string, lang: string): Promise<Buffer> {
